@@ -1,0 +1,99 @@
+---
+title: Introduction to General Swaption Valution with SabrSwaption
+author:
+  - name: Terry Leitch
+    affiliation: Ruxton Advisors
+    address:
+    - line 1
+    - line 2
+    email:  tleitch1@jhu.edu
+  - name: Author Two
+    affiliation: Affiliation
+    address:
+    - line 1
+    - line 2
+    email:  author2@work
+abstract: >
+  An abstract of less than 150 words.
+preamble: >
+  % Any extra latex you need in the preamble
+output: rticles::rjournal_article
+---
+
+## Introduction
+
+RQuantlib is a package that exposes some of the functionality of Quantlib to users via a 
+simple R interface. There is a broad set of functions that include fixed income and interest vrate derivatives. 
+This article goes in depth regarding a new function made available that exposes Peter Casper's SABR modeling 
+and the more recent work on path dependent Bermudan swaptions via his Markov Functional model \citet{caspers}.
+
+Recent functions have been added to the RQuantlib package that expose more relevant interest rate option functionaility to current swaption market. One function, discussed in greater detail here, is SabrSwaption, which provides access to the European and Bermudan exercise swap options, or swaptions.
+
+The underlying math that is required to line up no-arbitrage pricing of swaptions is varied in approach and the methodologies implemented in Quantlib are illustrated in \citet{Brigo} for European exercise while the methodology for the Bermudan is documented in \citiet{Caspers}. The complication anyone implementing these models is the exponential grwoth in data requirements. While a yield curve can be described eficiently with 10-20 data points in one dimension, the volatility data is a cube. Given the size of the data an example data set is provided with the package in order to help the user get started with the new function. The yield curve provided, tsQuotes, is a small dataset, while the volatility data in the vcube dataset is 1384 observations for a single currency. Handling the scale of this complexity requires appropriate tools, and a Shiny app is included to help the user get started with inquiring and managing the scale of the data. The app is in the packagaes **inst**.
+
+
+## Rate and Volatility Sensitivities
+
+The example in the documentation illustartes a basic call to get a value from SabrSwaption, but the function has the capability to deliver more information regarding the local sensitivities to rates and volatilities. This functionality was not designed with the novice in mind, however, as the computational intensity required for swaptions means that numerical derivative computation, if poorly thought through, can be very slow and, more importantly, poorly designed. 
+
+To enable more general utilization regarding derivatives, an optional one or two curves are provided for as optional. If a single curve is provided, **tsUp01**, an upront NPV change in value is calculated based on the new curve versus the base curve. No scaling is performed, it is a raw change in  value. This means that the user can create a perturbation of their liking, whether a forward rate, a parallel shift, etc, and use the resulting change in value as appropriate to their application.
+
+If an additonal curve **tsDn01** is provided, the numerator of the value of the convexity calculation is returned.
+
+The adavanatage of this design is it allows reuse of the set up calculations which, given the size of the data, is roughly equal to the actual numerical computation time.
+
+Vega is also available via a true/false **vega** flag in the params input structure.
+
+
+## Interest Option Modeling Example
+An example is included in the RQuantLib documentaion. We'll extend it here to look at sensitvity calculations for european and bermudans.
+
+```{r}
+library(RQuantLib)
+params <- list(tradeDate=as.Date('2016-2-15'),
+               settleDate=as.Date('2016-2-17'),
+               startDate=as.Date('2017-2-17'),
+               maturity=as.Date('2022-2-17'),
+               european=TRUE,
+               dt=.25,
+               expiryDate=as.Date('2017-2-17'),
+               strike=.02,
+               interpWhat="discount",
+               interpHow="loglinear")
+
+# Set leg paramters for generating discount curve
+dclegparams=list(dayCounter="Thirty360",
+                 fixFreq="Annual",
+                 floatFreq="Semiannual")
+
+setEvaluationDate(as.Date("2016-2-16"))               
+times<-times <- seq(0,14.75,.25)
+
+data(tsQuotes)
+dcurve <- DiscountCurve(params, tsQuotes, times=times,dclegparams)
+
+# Price the Bermudan swaption
+swaplegparams=list(fixFreq="Semiannual",floatFreq="Quarterly")
+
+data(vcube)
+pricing <- SabrSwaption(params, dcurve,vcube,swaplegparams)
+pricing
+
+```
+
+
+
+
+## Another section
+
+There will likely be several sections, perhaps including code snippets, such as:
+
+```{r}
+x <- 1:10
+x
+```
+
+## Summary
+
+This file is only a basic article template. For full details of _The R Journal_ style and information on how to prepare your article for submission, see the [Instructions for Authors](https://journal.r-project.org/share/author-guide.pdf).
+\bibliography{RJreferences}

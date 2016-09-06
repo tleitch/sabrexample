@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "\\documentclass[a4paper]{report}\n\\usepackage[utf8]{inputenc}\n\\usepackage[T1]{fontenc}\n\\usepackage{RJournal}\n\\usepackage{amsmath,amssymb,array}\n\\usepackage{booktabs}\n\n\\providecommand{\\tightlist}{%\n  \\setlength{\\itemsep}{0pt}\\setlength{\\parskip}{0pt}}\n\n%% load any required packages here\n% Any extra latex you need in the preamble\n\n\\begin{document}\n\n%% do not edit, for illustration only\n\\sectionhead{Contributed research article}\n\\volume{XX}\n\\volnumber{YY}\n\\year{20ZZ}\n\\month{AAAA}\n\n\\begin{article}\n  \\input{SabrSwaptionExample}\n\\end{article}\n\n\\end{document}\n",
+    "created" : 1472781882617.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3247224479",
+    "id" : "B66743BA",
+    "lastKnownWriteTime" : 1472781972,
+    "last_content_update" : 1472781972,
+    "path" : "~/work/mydeck/SabrSwaptionIntro/RJwrapper.tex",
+    "project_path" : "RJwrapper.tex",
+    "properties" : {
+        "chunk_rendered_width" : "650"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "tex"
+}

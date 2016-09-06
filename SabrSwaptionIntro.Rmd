@@ -1,0 +1,78 @@
+---
+title: Introduction to General Swaption Valution with SabrSwaption
+author:
+  - name: Terry Leitch
+    affiliation: Ruxton Advisors
+    address:
+    - line 1
+    - line 2
+    email:  tleitch1@jhu.edu
+  - name: Author Two
+    affiliation: Affiliation
+    address:
+    - line 1
+    - line 2
+    email:  author2@work
+abstract: >
+  An abstract of less than 150 words.
+preamble: >
+  % Any extra latex you need in the preamble
+output: rticles::rjournal_article
+---
+
+## Introduction
+
+RQuantlib is a package that exposes some of the functionality of Quantlib to users via a 
+simple R interface. There is a broad set of functions that include fixed income and interest vrate derivatives. 
+This article goes in depth regarding a new function made available that exposes Peter Casper's SABR modeling 
+and the more recent work on path dependent Bermudan swaptions via his Markov Functional model \citet{caspers}.
+
+## Interest Option Modeling
+Interest rates present numerous complex issues for a modeler. The underlying instruments that options are written on
+are themselves nonlinear, which compounds the complexity of the valuation. In addition, the underlying instruments are quoted on
+numerous different compounding and daycount basis and the underlying option prices do not fit any of the standard random innovation methods, 
+so modeling takes significant work and care. Fortunately the Quantlib library handles all of these complexities.
+
+The most signifcant of these is the lack of fit to standard innovation models. I order to address this, more complex models are
+used to fit the market prices add random variables and parameters to fit the observed market prices. A significant issue with 
+this is that a fit is required at each exiration for every tenor, so to reproduce the market prices, numerous local dynamic model are 
+generated as opposed to a single global model.
+
+European options, which are path indepnedent, are fit with these models with little issue as long as the option lines up with a current 
+expiration, but as tme evolves they fall in between the expirations, so an interpolation is required. Quantlib's modeling for SABR 
+takes this into account and prices by interpolating on epiration and strike.
+
+Path dependent options are more difficault as they cut through not only stike and expirations, but also tenors. This is what the 
+Markov Functional model addresses for Bermudan pricing.
+
+Both of these are made available in R for swaption modeling through the SabrSwaption function. 
+
+
+
+
+This section may contain a figure such as Figure \ref{figure:rlogo}.
+
+
+
+
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics{Rlogo}
+  \caption{The logo of R.}
+  \label{figure:rlogo}
+\end{figure}
+
+## Another section
+
+There will likely be several sections, perhaps including code snippets, such as:
+
+```{r}
+x <- 1:10
+x
+```
+
+## Summary
+
+This file is only a basic article template. For full details of _The R Journal_ style and information on how to prepare your article for submission, see the [Instructions for Authors](https://journal.r-project.org/share/author-guide.pdf).
+\bibliography{RJreferences}
